@@ -5,9 +5,19 @@ const router = express.Router();
 const leagueService = require('../services/leagueService');
 
 router.get('/', async (req, res) => {
-    const activeLeagues = await leagueService.getActiveLeague();
+    try {
+        const leagueBoard = await leagueService.getLastLeagueBoard();
 
-    res.send(activeLeagues);
+        if(!leagueBoard){
+            res.status(404).send({ message: 'Não há nenhuma liga criada.' })
+            return;
+        }
+
+        res.send(leagueBoard);
+    } catch(err){
+        console.log(err);
+        res.status(500).send({ message: `Não foi possível obter a liga` });
+    }
 });
 
 router.post('/', async (req, res) => {
@@ -17,7 +27,7 @@ router.post('/', async (req, res) => {
         const activeLeagues = await leagueService.getActiveLeague();
 
         if(activeLeagues.length > 0){
-            res.status(400).send({ message: `A liga ${ activeLeagues[ activeLeagues.length - 1 ].name } ainda está ativa`})
+            res.status(400).send({ message: `A liga '${ activeLeagues[ activeLeagues.length - 1 ].name }' ainda está ativa`})
             return;
         }
 
