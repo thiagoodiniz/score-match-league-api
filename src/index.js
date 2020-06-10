@@ -7,6 +7,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 require('./controllers/leagueController')(app);
+require('./controllers/playerController')(app);
 
 const port = 3000;
 

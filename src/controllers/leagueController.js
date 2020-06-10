@@ -2,15 +2,14 @@ const express = require('express');
 
 const router = express.Router();
 
-var knex = require('../database');
-
+const service = require('../services');
 
 router.get('/', async (req, res) => {
-    knex('tb_league')
-    .then(dados => res.send(dados))
-    .catch(err => console.log(err));
-});
+    const divisionTypes = await service.getDivisions();
 
+    res.send(divisionTypes);
+    console.log(divisionTypes);
+});
 
 
 module.exports = app => app.use('/league', router);
