@@ -9,7 +9,7 @@ router.get('/', async (req, res) => {
         const leagueDivisions = await leagueService.getLastLeagueDivisions();
 
         if(!leagueDivisions){
-            res.status(404).send({ message: 'Não há nenhuma liga criada.' })
+            res.status(404).send({ message: 'Não há nenhuma liga criada.' });
             return;
         }
 
@@ -18,7 +18,7 @@ router.get('/', async (req, res) => {
             return {
                 ...division,
                 players
-            }
+            };
         });
 
         leagueDivisions.divisions = await Promise.all(divisionPlayerPromisses);
@@ -37,7 +37,7 @@ router.post('/', async (req, res) => {
         const activeLeagues = await leagueService.getActiveLeague();
 
         if(activeLeagues.length > 0){
-            res.status(400).send({ message: `A liga '${ activeLeagues[ activeLeagues.length - 1 ].name }' ainda está ativa`})
+            res.status(400).send({ message: `A liga '${ activeLeagues[ activeLeagues.length - 1 ].name }' ainda está ativa`});
             return;
         }
 
@@ -50,6 +50,7 @@ router.post('/', async (req, res) => {
     }
 });
 
+// Jogadores para as divisões
 router.post('/divisionPlayers', async (req, res) => {
     try {
 
@@ -72,7 +73,9 @@ router.post('/divisionPlayers', async (req, res) => {
         const divisionPlayersLeft = divisionConfig.number_max_of_players - divisionPlayers.length;
 
         if(players.length > divisionPlayersLeft ){
-            res.status(400).send({ message: `A divisão ${ divisionConfig.name } já tem ${divisionPlayers.length} jogadores. O limite é: ${divisionConfig.number_max_of_players}`});
+            res.status(400).send({ 
+                message: `A divisão ${ divisionConfig.name } já tem ${divisionPlayers.length} jogadores. O limite é: ${divisionConfig.number_max_of_players}`
+            });
             return;
         }
 
@@ -86,6 +89,44 @@ router.post('/divisionPlayers', async (req, res) => {
         await leagueService.saveDivisionPlayers(divisionConfig.leagueDivisionId, players);
 
         res.send({ message: 'Jogadores adicionados com sucesso', playersLeft: divisionPlayersLeft - players.length });
+
+    } catch(err) {
+        console.log(err);
+        res.status(500).send({ message: `Erro inesperado.` });
+    }
+});
+
+router.post('/divisionPlayers/matches', async (req, res) => {
+    try {
+        const { leagueId, leagueDivision, rounds } = req.body;
+
+        if(!leagueId || !leagueDivision || !rounds){
+            res.status(400).send({ message: 'É necessário passar os campos: leagueId, leagueDivision e rounds'});
+            return;
+        }
+
+        const leagueConfig = await leagueService.getLeagueConfig(leagueId);
+        if(!leagueConfig.length){
+            res.status(400).send({ message: `Não foi encontrado Liga com id: ${leagueId}`});
+            return;
+        }
+        const divisionConfig = leagueConfig.find(conf => conf.id == leagueDivision || conf.name == leagueDivision);
+
+        if( rounds.length != divisionConfig.number_max_of_players -1 ){
+            res.status(400).send({
+                message: `A divisão ${ divisionConfig.name } precisa ter ${ divisionConfig.number_max_of_players -1 } rodadas.`
+            });
+        }
+
+        if(rounds.some(round => round.length != divisionConfig.number_max_of_players / 2)){
+            res.status(400).send({
+                message: `Cada rodada da divisão ${ divisionConfig.name } precisa ter ${ divisionConfig.number_max_of_players / 2 } partidas.`
+            });
+        }
+
+        await leagueService.createMatches(divisionConfig.id, rounds);
+
+        res.send({ message: 'Partidas registradas com sucesso.' });
 
     } catch(err) {
         console.log(err);

@@ -81,6 +81,25 @@ const leagueService = {
         });
 
         return knex.batchInsert('tb_league_division_players', divisionPlayerRows);            
+    },
+
+    createMatches: (leagueDivisionId, rounds) => {
+        const matchRows = []; 
+        rounds.map(round => {
+            return round.map(match => {
+                matchRows.push({
+                    id_league_division: leagueDivisionId,
+                    round: match.round,
+                    id_league_division_player1: match.idLeagueDivisionPlayer1,
+                    id_league_division_player2: match.idLeagueDivisionPlayer2,
+                    status: 4,
+                });
+            });
+        });
+
+        debugger;
+
+        return knex.batchInsert('tb_league_division_matches', matchRows);
     }
 }
 
