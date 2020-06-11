@@ -8,7 +8,7 @@ const playerService = {
 
     savePlayer: (name, uf) => {
         return knex('tb_player')
-        .insert({name, uf})
+        .insert({name, uf, status: 1})
         .then(res => res[0]);
     },
 
