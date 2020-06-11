@@ -8,7 +8,7 @@ const leagueService = {
     getActiveLeague: () => {
         return knex('tb_league')
             .where('status', '=', 1)
-            .then(data => data)
+            .then(data => data);
     },
 
     getLastLeagueBoard: () => {
@@ -18,10 +18,10 @@ const leagueService = {
             .then(data => {
                 if(data.length > 0){
                     const league = data[0];
-                    return knex('tb_league_division')
-                        .join('tb_division_type', 'tb_league_division.id_division_type', '=', 'tb_division_type.id')
-                        .select('tb_league_division.id', 'tb_division_type.name as division')
-                        .where('tb_league_division.id_league', '=', league.id)
+                    return knex('tb_league_division AS a')
+                        .join('tb_division_type AS b', 'a.id_division_type', '=', 'b.id')
+                        .select('a.id', 'b.name as division')
+                        .where('a.id_league', '=', league.id)
                         .then(data => {
                             return {
                                 ...league,
@@ -29,7 +29,7 @@ const leagueService = {
                             }
                         });
                 }
-            })
+            });
     },
 
     // Cria a Liga e as divisões
@@ -46,8 +46,33 @@ const leagueService = {
                     }
                 });
                 return knex.batchInsert('tb_league_division', divisionRows)
-                .then(res => leagueId)        
+                .then(res => leagueId);
             });
+    },
+
+    getLeagueConfig: (leagueId) => {
+        return knex('tb_league_division AS a')
+            .join('tb_division_type AS b', 'a.id_division_type', '=', 'b.id')
+            .select('b.*', 'a.id AS leagueDivisionId')
+            .where('a.id_league', '=', leagueId)
+            .then(data => data);
+    },
+
+    getDivisionPlayersCount: (leagueDivisionId) => {
+        return knex('tb_league_division_players')
+            .where('id_league_division', '=', leagueDivisionId)
+            .then(data => data)
+    },
+
+    saveDivisionPlayers: (leagueDivisionId, players) => {
+        const divisionPlayerRows = players.map(playerId => {
+            return {
+                id_player: playerId,
+                id_league_division: leagueDivisionId,
+            }
+        });
+
+        return knex.batchInsert('tb_league_division_players', divisionPlayerRows);            
     }
 }
 
