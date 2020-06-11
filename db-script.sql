@@ -9,10 +9,7 @@ CREATE TABLE tb_status (
     PRIMARY KEY (id)
 );
 
-INSERT INTO tb_status (description) VALUES ('ATIVO');
-INSERT INTO tb_status (description) VALUES ('ENCERRADO');
-INSERT INTO tb_status (description) VALUES ('BANIDO');
-INSERT INTO tb_status (description) VALUES ('PENDENTE');
+INSERT INTO tb_status (description) VALUES ('ATIVO'), ('ENCERRADO'), ('BANIDO'), ('PENDENTE');
 
 CREATE TABLE tb_player(
     id INT AUTO_INCREMENT,
@@ -36,13 +33,11 @@ CREATE TABLE tb_league (
 CREATE TABLE tb_division_type (
     id INT AUTO_INCREMENT NOT NULL,
     name VARCHAR(45) NOT NULL,
+    number_max_of_players int NOT NULL,
     PRIMARY KEY (id)
 );
 
-INSERT INTO tb_division_type (name) VALUES ('A');
-INSERT INTO tb_division_type (name) VALUES ('B');
-INSERT INTO tb_division_type (name) VALUES ('C');
-INSERT INTO tb_division_type (name) VALUES ('D');
+INSERT INTO tb_division_type (name, number_max_of_players) VALUES ('A', 12), ('B', 12), ('C', 12), ('D', 12);
 
 CREATE TABLE tb_league_division (
     id INT AUTO_INCREMENT NOT NULL,
