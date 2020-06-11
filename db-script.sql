@@ -60,6 +60,7 @@ CREATE TABLE tb_league_division_players (
 CREATE TABLE tb_league_division_matches (
     id INT AUTO_INCREMENT NOT NULL,
     id_league_division INT NOT NULL, -- FK tb_league_division
+    round INT NOT NULL,
     id_league_division_player1 INT NOT NULL, -- FK tb_league_division_players
     id_league_division_player2 INT NOT NULL, -- FK tb_league_division_players
     scored_goals_player1 INT,
