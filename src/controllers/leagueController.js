@@ -6,14 +6,24 @@ const leagueService = require('../services/leagueService');
 
 router.get('/', async (req, res) => {
     try {
-        const leagueBoard = await leagueService.getLastLeagueBoard();
+        const leagueDivisions = await leagueService.getLastLeagueDivisions();
 
-        if(!leagueBoard){
+        if(!leagueDivisions){
             res.status(404).send({ message: 'Não há nenhuma liga criada.' })
             return;
         }
 
-        res.send(leagueBoard);
+        const divisionPlayerPromisses = leagueDivisions.divisions.map(async division => {
+            const players = await leagueService.getDivisionPlayers(division.idLeagueDivision);
+            return {
+                ...division,
+                players
+            }
+        });
+
+        leagueDivisions.divisions = await Promise.all(divisionPlayerPromisses);
+
+        res.send(leagueDivisions);
     } catch(err){
         console.log(err);
         res.status(500).send({ message: `Não foi possível obter a liga` });

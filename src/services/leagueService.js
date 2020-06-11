@@ -11,7 +11,7 @@ const leagueService = {
             .then(data => data);
     },
 
-    getLastLeagueBoard: () => {
+    getLastLeagueDivisions: async () => {
         return knex('tb_league')
             .orderBy('register_date', 'desc')
             .limit('1')
@@ -20,9 +20,9 @@ const leagueService = {
                     const league = data[0];
                     return knex('tb_league_division AS a')
                         .join('tb_division_type AS b', 'a.id_division_type', '=', 'b.id')
-                        .select('a.id', 'b.name as division')
+                        .select('a.id AS idLeagueDivision', 'b.name AS division')
                         .where('a.id_league', '=', league.id)
-                        .then(data => {
+                        .then( data => {
                             return {
                                 ...league,
                                 divisions: data,
@@ -30,6 +30,14 @@ const leagueService = {
                         });
                 }
             });
+    },
+
+    getDivisionPlayers: (leagueDivisionId) => {
+        return knex('tb_league_division_players AS a')
+            .join('tb_player AS b', 'b.id', '=', 'a.id_player')
+            .select('a.id_player', 'a.id AS idLeagueDivisionPlayer', 'b.name', 'b.uf')
+            .where('id_league_division', '=', leagueDivisionId)
+            .then(data => data)
     },
 
     // Cria a Liga e as divisões
