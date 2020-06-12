@@ -134,5 +134,24 @@ router.post('/divisionPlayers/matches', async (req, res) => {
     }
 });
 
+router.get('/leagueDivisionMatches', async (req,res) => {
+    try{
+        const { leagueDivisionId } = req.body;
+
+        if(!leagueDivisionId){
+            res.status(400).send({ message: 'É necessário passar o campo: leagueDivisionId'});
+            return;
+        }
+
+        const leagueDivisionMatches = await leagueService.getDivisionMatches(leagueDivisionId);
+
+        res.send(leagueDivisionMatches);
+
+    } catch(err) {
+        console.log(err);
+        res.status(500).send({ message: `Erro inesperado.` });
+    }
+});
+
 
 module.exports = app => app.use('/league', router);

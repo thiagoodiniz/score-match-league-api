@@ -97,10 +97,15 @@ const leagueService = {
             });
         });
 
-        debugger;
-
         return knex.batchInsert('tb_league_division_matches', matchRows);
-    }
+    },
+
+    getDivisionMatches: (leagueDivisionId) => {
+        return knex('tb_league_division_matches')
+            .where('id_league_division', '=', leagueDivisionId)
+            .then(data => data);
+    } 
+
 }
 
 module.exports = leagueService;
