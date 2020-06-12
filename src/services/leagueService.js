@@ -101,8 +101,11 @@ const leagueService = {
     },
 
     getDivisionMatches: (leagueDivisionId) => {
-        return knex('tb_league_division_matches')
-            .where('id_league_division', '=', leagueDivisionId)
+        return knex('tb_league_division_matches AS a')
+            .join('tb_league_division_players AS player1', 'a.id_league_division_player1', '=', 'player1.id')
+            .join('tb_league_division_players AS player2', 'a.id_league_division_player2', '=', 'player2.id')
+            .select('a.*', 'player1.id_player AS idPlayer1', 'player2.id_player AS idPlayer2')
+            .where('a.id_league_division', '=', leagueDivisionId)
             .then(data => data);
     } 
 

@@ -144,8 +144,21 @@ router.get('/leagueDivisionMatches', async (req,res) => {
         }
 
         const leagueDivisionMatches = await leagueService.getDivisionMatches(leagueDivisionId);
+        const leagueDivisionPlayers = await leagueService.getDivisionPlayers(leagueDivisionId);
 
-        res.send(leagueDivisionMatches);
+        const matches = leagueDivisionMatches.map(match => {
+            return {
+                idLeagueDivisionMatch: match.id,
+                idLeagueDivision: match.id_league_division,
+                round: match.round,
+                player1: leagueDivisionPlayers.find(player => player.id_player === match.idPlayer1),
+                player2: leagueDivisionPlayers.find(player => player.id_player === match.idPlayer2),
+                lastUpdateDate: match.last_update_date,
+                status: match.status
+            }
+        });
+
+        res.send(matches);
 
     } catch(err) {
         console.log(err);
