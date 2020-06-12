@@ -74,7 +74,7 @@ router.post('/divisionPlayers', async (req, res) => {
 
         if(players.length > divisionPlayersLeft ){
             res.status(400).send({ 
-                message: `A divisão ${ divisionConfig.name } já tem ${divisionPlayers.length} jogadores. O limite é: ${divisionConfig.number_max_of_players}`
+                message: `Limite ultrapassado. Restam ${divisionPlayersLeft} vagas na divisão ${divisionConfig.name}.` // s2
             });
             return;
         }
