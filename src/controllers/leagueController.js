@@ -173,5 +173,24 @@ router.get('/leagueDivisionMatches/:id?', async (req,res) => {
     }
 });
 
+router.put('/leagueDivisionMatches', async (req,res) => {
+    try{
+        const { matches } = req.body;
+
+        if(!matches || matches.length < 1){
+            res.status(400).send({ message: 'É necessário passar os campos: matches'});
+            return;
+        }
+
+        await leagueService.updateDivisionMatches(matches);
+
+        res.send({ message: 'Placares atualizados com sucesso.' })
+
+    } catch(err) {
+        console.log(err);
+        res.status(500).send({ message: `Erro inesperado.` });
+    }
+});
+
 
 module.exports = app => app.use('/league', router);

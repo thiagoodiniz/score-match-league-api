@@ -115,6 +115,28 @@ const leagueService = {
         return query.then(data => data);
     },
 
+    updateDivisionMatches: matches => {
+        const queries = [];
+        
+        matches.map(match => {
+            queries.push(
+                knex('tb_league_division_matches')
+                .where('id', '=', match.idLeagueDivisionMatch)
+                .update({
+                    scored_goals_player1: match.player1.scoredGoals,
+                    scored_goals_player2: match.player2.scoredGoals,
+                    last_update_date: new Date(),
+                    status: match.player1.scoredGoals && match.player2.scoredGoals 
+                        ? 2 // ENCERRADO 
+                        : 4 // PENDENTE
+                })
+            );
+        });
+
+        return Promise.all(queries)
+            .then(res => res)
+    },
+
 }
 
 module.exports = leagueService;
