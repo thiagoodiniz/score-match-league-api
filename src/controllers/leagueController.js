@@ -134,8 +134,9 @@ router.post('/divisionPlayers/matches', async (req, res) => {
     }
 });
 
-router.get('/leagueDivisionMatches', async (req,res) => {
+router.get('/leagueDivisionMatches/:id?', async (req,res) => {
     try{
+        const leagueDivisionMatchId = req.params.id;
         const { leagueDivisionId } = req.body;
 
         if(!leagueDivisionId){
@@ -143,7 +144,7 @@ router.get('/leagueDivisionMatches', async (req,res) => {
             return;
         }
 
-        const leagueDivisionMatches = await leagueService.getDivisionMatches(leagueDivisionId);
+        const leagueDivisionMatches = await leagueService.getDivisionMatches(leagueDivisionId, leagueDivisionMatchId);
         const leagueDivisionPlayers = await leagueService.getDivisionPlayers(leagueDivisionId);
 
         const matches = leagueDivisionMatches.map(match => {
@@ -151,8 +152,14 @@ router.get('/leagueDivisionMatches', async (req,res) => {
                 idLeagueDivisionMatch: match.id,
                 idLeagueDivision: match.id_league_division,
                 round: match.round,
-                player1: leagueDivisionPlayers.find(player => player.id_player === match.idPlayer1),
-                player2: leagueDivisionPlayers.find(player => player.id_player === match.idPlayer2),
+                player1: {
+                    ...leagueDivisionPlayers.find(player => player.id_player === match.idPlayer1),
+                    scoredGoals: match.scored_goals_player1,
+                },
+                player2: {
+                    ...leagueDivisionPlayers.find(player => player.id_player === match.idPlayer2),
+                    scoredGoals: match.scored_goals_player2,
+                },
                 lastUpdateDate: match.last_update_date,
                 status: match.status
             }

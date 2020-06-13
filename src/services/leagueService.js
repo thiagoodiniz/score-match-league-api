@@ -100,14 +100,20 @@ const leagueService = {
         return knex.batchInsert('tb_league_division_matches', matchRows);
     },
 
-    getDivisionMatches: (leagueDivisionId) => {
-        return knex('tb_league_division_matches AS a')
+    getDivisionMatches: (leagueDivisionId, leagueDivisionMatchId) => {
+        const query = knex('tb_league_division_matches AS a')
             .join('tb_league_division_players AS player1', 'a.id_league_division_player1', '=', 'player1.id')
             .join('tb_league_division_players AS player2', 'a.id_league_division_player2', '=', 'player2.id')
-            .select('a.*', 'player1.id_player AS idPlayer1', 'player2.id_player AS idPlayer2')
-            .where('a.id_league_division', '=', leagueDivisionId)
-            .then(data => data);
-    } 
+            .select('a.*', 'player1.id_player AS idPlayer1', 'player2.id_player AS idPlayer2');
+
+        if(leagueDivisionMatchId){
+            query.where('a.id', '=', leagueDivisionMatchId)
+        } else {
+            query.where('a.id_league_division', '=', leagueDivisionId)
+        }
+
+        return query.then(data => data);
+    },
 
 }
 
