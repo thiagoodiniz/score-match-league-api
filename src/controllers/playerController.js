@@ -4,9 +4,10 @@ const router = express.Router();
 
 const playerService = require('../services/playerService');
 
-router.get('/', async (req, res) => {
+router.get('/:id?', async (req, res) => {
     try {
-        const players = await playerService.getPlayers();
+        const playerId = req.params.id;
+        const players = await playerService.getPlayers(playerId);
         res.send(players);
     } catch(err){
         console.log(err);
