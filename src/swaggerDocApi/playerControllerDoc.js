@@ -2,6 +2,7 @@
  * @swagger
  * /player/{id}:
  *  get:
+ *    description: Use to request a specific player
  *    parameters:
  *     - in: path
  *       name: id
@@ -11,12 +12,12 @@
  *       default: 1
  *       description: The player id
  * 
- *    description: Use to request a specific player
  *    responses:
  *      '200':
  *        description: A successful response
  * 
  *  put:
+ *    description: Use to update a specific player
  *    parameters:
  *      - in: path
  *        name: id
@@ -41,7 +42,6 @@
  *              type: string
  *              example: SP
  * 
- *    description: Use to update a specific player
  *    responses:
  *     '200':
  *       description: A successful response

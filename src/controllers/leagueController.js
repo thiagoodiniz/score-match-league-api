@@ -4,15 +4,16 @@ const router = express.Router();
 
 const leagueService = require('../services/leagueService');
 
+
 router.get('/', async (req, res) => {
     try {
         const leagueDivisions = await leagueService.getLastLeagueDivisions();
-
+        
         if(!leagueDivisions){
             res.status(404).send({ message: 'Não há nenhuma liga criada.' });
             return;
         }
-
+        
         const divisionPlayerPromisses = leagueDivisions.divisions.map(async division => {
             const players = await leagueService.getDivisionPlayers(division.idLeagueDivision);
             return {
@@ -20,9 +21,9 @@ router.get('/', async (req, res) => {
                 players
             };
         });
-
+        
         leagueDivisions.divisions = await Promise.all(divisionPlayerPromisses);
-
+        
         res.send(leagueDivisions);
     } catch(err){
         console.log(err);
@@ -96,7 +97,7 @@ router.post('/divisionPlayers', async (req, res) => {
     }
 });
 
-router.post('/divisionPlayers/matches', async (req, res) => {
+router.post('/divisionMatches', async (req, res) => {
     try {
         const { leagueId, leagueDivision, rounds } = req.body;
 
@@ -134,7 +135,7 @@ router.post('/divisionPlayers/matches', async (req, res) => {
     }
 });
 
-router.get('/leagueDivisionMatches/:id?', async (req,res) => {
+router.get('/divisionMatches/:id?', async (req,res) => {
     try{
         const leagueDivisionMatchId = req.params.id;
         const { leagueDivisionId } = req.body;
@@ -173,7 +174,7 @@ router.get('/leagueDivisionMatches/:id?', async (req,res) => {
     }
 });
 
-router.put('/leagueDivisionMatches', async (req,res) => {
+router.put('/divisionMatches', async (req,res) => {
     try{
         const { matches } = req.body;
 
