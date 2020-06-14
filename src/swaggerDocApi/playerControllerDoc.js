@@ -2,6 +2,8 @@
  * @swagger
  * /player/{id}:
  *  get:
+ *    tags:
+ *      - Player
  *    description: Use to request a specific player
  *    parameters:
  *     - in: path
@@ -17,6 +19,8 @@
  *        description: A successful response
  * 
  *  put:
+ *    tags:
+ *      - Player
  *    description: Use to update a specific player
  *    parameters:
  *      - in: path
@@ -48,12 +52,16 @@
  * 
  * /player:
  *  get: 
+ *    tags:
+ *      - Player
  *    description: Use to request all players
  *    responses:
  *      '200':
  *        description: A successful response
  * 
  *  post:
+ *    tags:
+ *      - Player
  *    description: Use to create a new player
  *    parameters:
  *      - in: body

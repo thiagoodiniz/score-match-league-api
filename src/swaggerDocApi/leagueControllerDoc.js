@@ -2,6 +2,8 @@
  * @swagger
  * /league:
  *  get:
+ *    tags:
+ *      - League
  *    description: Use to request the active league or the last league finished. And its players with league statistics.
  * 
  *    responses:
@@ -10,7 +12,9 @@
  *      '404':
  *        description: No league in database
  * 
- *  post: 
+ *  post:
+ *    tags:
+ *      - League
  *    description: Use to create a new league and it division.
  *    parameters:
  *     - in: body
@@ -31,7 +35,9 @@
  *        description: Have a league active
  * 
  * /league/divisionPlayers:
- *  post: 
+ *  post:
+*    tags:
+ *      - League
  *    description: Use to insert players in league division
  *    parameters:
  *      - in: body
@@ -40,7 +46,7 @@
  *          required:
  *            - leagueId
  *            - division
- *            - players
+ *            - Leagues
  *          properties:
  *            leagueId:
  *              type: integer
@@ -63,6 +69,8 @@
  * 
  * /league/divisionMatches:
  *  post:
+*    tags:
+ *      - League
  *    description: Use to create division matches
  *    parameters:
  *      - in: body
@@ -106,6 +114,8 @@
  * 
  *     
  *  get:
+ *    tags:
+ *      - League
  *    description: Use to get all division matches with result.
  *    parameters:
  *      - in: body
@@ -124,6 +134,8 @@
  *         description: When one or more of the parameters does not passed.
  * 
  *  put:
+ *    tags:
+ *      - League
  *    description: Use to update scoreboard of the division matches
  *    parameters:
  *      - in: body
@@ -160,6 +172,8 @@
  * 
  * /league/divisionMatches/{id}:
  *  get:
+ *    tags:
+ *      - League
  *    description: Use to request a specific match;
  *    parameters:
  *     - in: path
