@@ -7,7 +7,7 @@ const playerService = require('../services/playerService');
 router.get('/:id?', async (req, res) => {
     try {
         const playerId = req.params.id;
-        const players = await playerService.getPlayers(playerId);
+        const players = await playerService.getPlayers(parseInt(playerId));
         res.send(players);
     } catch(err){
         console.log(err);
