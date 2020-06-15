@@ -81,7 +81,62 @@ const leagueService = {
         });
 
         return knex.batchInsert('tb_league_division_players', divisionPlayerRows);            
-    }
+    },
+
+    createMatches: (leagueDivisionId, rounds) => {
+        const matchRows = []; 
+        rounds.map(round => {
+            return round.map(match => {
+                matchRows.push({
+                    id_league_division: leagueDivisionId,
+                    round: match.round,
+                    id_league_division_player1: match.idLeagueDivisionPlayer1,
+                    id_league_division_player2: match.idLeagueDivisionPlayer2,
+                    status: 4,
+                });
+            });
+        });
+
+        return knex.batchInsert('tb_league_division_matches', matchRows);
+    },
+
+    getDivisionMatches: (leagueDivisionId, leagueDivisionMatchId) => {
+        const query = knex('tb_league_division_matches AS a')
+            .join('tb_league_division_players AS player1', 'a.id_league_division_player1', '=', 'player1.id')
+            .join('tb_league_division_players AS player2', 'a.id_league_division_player2', '=', 'player2.id')
+            .select('a.*', 'player1.id_player AS idPlayer1', 'player2.id_player AS idPlayer2');
+
+        if(leagueDivisionMatchId){
+            query.where('a.id', '=', leagueDivisionMatchId)
+        } else {
+            query.where('a.id_league_division', '=', leagueDivisionId)
+        }
+
+        return query.then(data => data);
+    },
+
+    updateDivisionMatches: matches => {
+        const queries = [];
+        
+        matches.map(match => {
+            queries.push(
+                knex('tb_league_division_matches')
+                .where('id', '=', match.idLeagueDivisionMatch)
+                .update({
+                    scored_goals_player1: match.player1.scoredGoals,
+                    scored_goals_player2: match.player2.scoredGoals,
+                    last_update_date: new Date(),
+                    status: match.player1.scoredGoals && match.player2.scoredGoals 
+                        ? 2 // ENCERRADO 
+                        : 4 // PENDENTE
+                })
+            );
+        });
+
+        return Promise.all(queries)
+            .then(res => res)
+    },
+
 }
 
 module.exports = leagueService;

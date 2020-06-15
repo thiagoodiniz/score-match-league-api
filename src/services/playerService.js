@@ -1,9 +1,12 @@
 var knex = require('../database');
 
 const playerService = {
-    getPlayers: () => {
-        return knex('tb_player')
-        .then(data => data)
+    getPlayers: (playerId) => {
+        const query = knex('tb_player');
+        if(playerId){
+            query.where('id', '=', playerId);
+        }
+        return query.then(data => data)
     },
 
     savePlayer: (name, uf) => {
