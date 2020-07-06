@@ -4,6 +4,7 @@ const router = express.Router();
 
 const leagueService = require('../services/leagueService');
 const leagueDivisionHelper = require('../helpers/leagueDivisionHelper');
+const leagueDivisionHelpers = require('../helpers/leagueDivisionHelper');
 
 
 router.get('/', async (req, res) => {
@@ -24,9 +25,8 @@ router.get('/', async (req, res) => {
                 const playerDivisionMatches = divisionMatches.filter(divisionMatch => 
                     divisionMatch.idPlayer1 == player.id_player || divisionMatch.idPlayer2 == player.id_player );
 
-                player.stats = {
-                    points: leagueDivisionHelper.getPlayerDivisionPoints(player, playerDivisionMatches)
-                }
+                player.stats = leagueDivisionHelper.getPlayerDivisionStats(player, playerDivisionMatches);
+                
             })
 
             return {
