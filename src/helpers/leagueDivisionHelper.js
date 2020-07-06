@@ -24,7 +24,7 @@ const leagueDivisionHelpers = {
 
                 stats.completedMatches += 1;
 
-                if(match.idPlayer1 == player.id_player){
+                if(match.idPlayer1 == player.id){
                     const win = match.scored_goals_player1 > match.scored_goals_player2;
                     const draw = match.scored_goals_player1 == match.scored_goals_player2;
                     setStats(win, draw);

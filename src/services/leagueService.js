@@ -35,7 +35,7 @@ const leagueService = {
     getDivisionPlayers: (leagueDivisionId) => {
         return knex('tb_league_division_players AS a')
             .join('tb_player AS b', 'b.id', '=', 'a.id_player')
-            .select('a.id_player', 'a.id AS idLeagueDivisionPlayer', 'b.name', 'b.uf')
+            .select('a.id_player AS id', 'a.id AS idLeagueDivisionPlayer', 'b.name', 'b.uf')
             .where('id_league_division', '=', leagueDivisionId)
             .then(data => data)
     },

@@ -23,7 +23,7 @@ router.get('/', async (req, res) => {
 
             players.map(player => {
                 const playerDivisionMatches = divisionMatches.filter(divisionMatch => 
-                    divisionMatch.idPlayer1 == player.id_player || divisionMatch.idPlayer2 == player.id_player );
+                    divisionMatch.idPlayer1 == player.id || divisionMatch.idPlayer2 == player.id );
 
                 player.stats = leagueDivisionHelper.getPlayerDivisionStats(player, playerDivisionMatches);
                 
