@@ -28,6 +28,7 @@ router.get('/', async (req, res) => {
 
             return {
                 ...division,
+                divisionMatches,
                 players: leagueDivisionHelper.sortStandings(players),
             };
         });
