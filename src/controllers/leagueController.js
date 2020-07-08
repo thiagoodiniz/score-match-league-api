@@ -164,11 +164,11 @@ router.get('/divisionMatches/:id?', async (req,res) => {
                 idLeagueDivision: match.id_league_division,
                 round: match.round,
                 player1: {
-                    ...leagueDivisionPlayers.find(player => player.id_player === match.idPlayer1),
+                    ...leagueDivisionPlayers.find(player => player.id === match.idPlayer1),
                     scoredGoals: match.scored_goals_player1,
                 },
                 player2: {
-                    ...leagueDivisionPlayers.find(player => player.id_player === match.idPlayer2),
+                    ...leagueDivisionPlayers.find(player => player.id === match.idPlayer2),
                     scoredGoals: match.scored_goals_player2,
                 },
                 lastUpdateDate: match.last_update_date,
