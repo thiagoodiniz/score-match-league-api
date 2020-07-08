@@ -4,8 +4,6 @@ const router = express.Router();
 
 const leagueService = require('../services/leagueService');
 const leagueDivisionHelper = require('../helpers/leagueDivisionHelper');
-const leagueDivisionHelpers = require('../helpers/leagueDivisionHelper');
-
 
 router.get('/', async (req, res) => {
     try {
@@ -25,13 +23,12 @@ router.get('/', async (req, res) => {
                 const playerDivisionMatches = divisionMatches.filter(divisionMatch => 
                     divisionMatch.idPlayer1 == player.id || divisionMatch.idPlayer2 == player.id );
 
-                player.stats = leagueDivisionHelper.getPlayerDivisionStats(player, playerDivisionMatches);
-                
-            })
+                player.stats = leagueDivisionHelper.getPlayerDivisionStats(player, playerDivisionMatches); 
+            });
 
             return {
                 ...division,
-                players
+                players: leagueDivisionHelper.sortStandings(players),
             };
         });
         

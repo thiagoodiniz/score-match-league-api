@@ -43,7 +43,27 @@ const leagueDivisionHelpers = {
         stats.goalDifference = stats.scoredGoals - stats.concededGoals;
 
         return stats;
+    },
+
+    sortStandings: (players = []) => {
+        const sortByField = (players, sortedField) => {
+            return players.sort((a, b) => {
+                if(a.stats[sortedField] > b.stats[sortedField]){
+                    return -1;
+                } else if(a.stats[sortedField] < b.stats[sortedField]){
+                    return 1;
+                } else {
+                    return 0;
+                }
+            });
+        };
+
+        return sortByField(
+            sortByField(
+                sortByField(
+                    sortByField(players, 'points'), 'wins'), 'scoredGoals'), 'goalDifference');
     }
+
 
 }
 
