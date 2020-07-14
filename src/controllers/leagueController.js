@@ -15,9 +15,9 @@ router.get('/', async (req, res) => {
         }
         
         const divisionPlayerPromisses = leagueDivisions.divisions.map(async division => {
-            const players = await leagueService.getDivisionPlayers(division.idLeagueDivision);
+            const players = await leagueService.getDivisionPlayers(division.leagueDivisionId);
 
-            const divisionMatches = await leagueService.getDivisionMatches(division.idLeagueDivision);
+            const divisionMatches = await leagueService.getDivisionMatches(division.leagueDivisionId);
 
             players.map(player => {
                 const playerDivisionMatches = divisionMatches.filter(divisionMatch => 
@@ -66,10 +66,10 @@ router.post('/', async (req, res) => {
 router.post('/divisionPlayers', async (req, res) => {
     try {
 
-        const { leagueId, division, players } = req.body;
+        const { leagueId, leagueDivisionId, players } = req.body;
 
-        if(!leagueId || !division || !players){
-            res.status(400).send({ message: 'É obrigatório passar o ID da Liga, Divisão e os Jogadores'});
+        if(!leagueId || !leagueDivisionId || !players){
+            res.status(400).send({ message: 'É obrigatório passar o ID da Liga, ID da Divisão e os Jogadores'});
             return;
         }
 
@@ -80,7 +80,13 @@ router.post('/divisionPlayers', async (req, res) => {
             return;
         }
 
-        let divisionConfig = leagueConfig.find(conf => conf.id == division || conf.name == division);
+        let divisionConfig = leagueConfig.find( conf => conf.id == leagueDivisionId );
+
+        if(!divisionConfig){
+            res.status(400).send({ message: `Não foi encontrado Divisão com id: ${leagueDivisionId}`});
+            return;
+        }
+
         const divisionPlayers = await leagueService.getDivisionPlayersCount(divisionConfig.id);
         const divisionPlayersLeft = divisionConfig.number_max_of_players - divisionPlayers.length;
 
